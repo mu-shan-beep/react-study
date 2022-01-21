@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script
+      crossorigin
+      src="https://unpkg.com/react@16/umd/react.production.min.js"
+    ></script>
+    <script
+      crossorigin
+      src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js"
+    ></script>
+    <script src="https://cdn.staticfile.org/babel-standalone/6.26.0/babel.min.js"></script>
+    <title>react-map</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="text/babel">
+      /**
+       * Key帮助React识别哪些元素改变了
+       *
+       */
+      const numbers = [1, 2, 3, 4, 5];
+      const posts = [
+        { id: 1, title: "Hello World", content: "Welcome to learning React !" },
+        {
+          id: 1,
+          title: "Installation",
+          content: "You can install React from  npm.",
+        },
+      ];
+
+      function ListItem(props) {
+        return <li>{props.value}</li>;
+      }
+
+      /*     function NumberList(props) {
+        const numbers = props.numbers;
+        const listItems = numbers.map((number) => (
+          <ListItem key={number.toString()} value={number} />
+        ));
+        return <ul>{listItems}</ul>;
+      } */
+
+      //   内联map（）
+      function NumberList(props) {
+        const numbers = props.numbers;
+        // {numbers.map((number) => {
+        //   return <ListItem key={number.toString()} value={number} />;
+        // })}
+        return (
+          <ul>
+            {numbers.map((number) => (
+              <ListItem key={number.toString()} value={number} />
+            ))}
+          </ul>
+        );
+      }
+
+      function Blog(props) {
+        const sidebar = (
+          <ul>
+            {props.posts.map((post) => (
+              <li key={props.id}>{post.title}</li>
+            ))}
+          </ul>
+        );
+
+        const content = props.posts.map((post) => (
+          <div key={post.id}>
+            <h3>{post.title}</h3>
+            <p>{post.content}</p>
+          </div>
+        ));
+
+        return (
+          <div>
+            {sidebar}
+            <hr />
+            {content}
+          </div>
+        );
+      }
+
+      ReactDOM.render(
+        <div>
+          <Blog posts={posts} />
+          <NumberList numbers={numbers} />
+        </div>,
+        document.getElementById("root")
+      );
+    </script>
+  </body>
+</html>

@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>错误边界</title>
+    <script
+      crossorigin
+      src="https://unpkg.com/react@16/umd/react.production.min.js"
+    ></script>
+    <script
+      crossorigin
+      src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js"
+    ></script>
+    <script src="https://cdn.staticfile.org/babel-standalone/6.26.0/babel.min.js"></script>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="text/babel">
+      /**
+       * 错误边界是一种React组件，可捕获发生在其子组件树任何位置的javascript错误并打印，同时展示降级UI.
+       * 如果class组件中定义了 static getDerivedStateFromError() 或 componentDidCatch() 这两个生命周期中一个，或两个时，就变成了一个错误边界，当抛出错误后，使用 static getDerivedStateFormError() 渲染备用 UI ,使用 componentDidCatch() 打印错误信息
+       */
+
+      class ErrorBoundary extends React.Component {
+        constructor(props) {
+          super(props);
+          this.state = {
+            hasError: false,
+          };
+        }
+
+        static getDerivedStateFromError(error) {
+          return { hasError: true };
+        }
+
+        componentDidCatch(error, errorInfo) {
+          logErrorToMyService(error, errorInfo);
+        }
+
+        render() {
+          if (this.state.hasError) {
+            return <h1>Something went wrong</h1>;
+          }
+          return this.props.children;
+        }
+      }
+
+      function MyWidget() {
+        return <h1>我是 MyWidget 组件</h1>;
+      }
+
+      ReactDOM.render(
+        <div>
+          <ErrorBoundary>
+            <MyWidget />
+          </ErrorBoundary>
+        </div>,
+        document.getElementById("root")
+      );
+    </script>
+  </body>
+</html>

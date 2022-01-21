@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="zh-en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script
+      crossorigin
+      src="https://unpkg.com/react@16/umd/react.production.min.js"
+    ></script>
+    <script
+      crossorigin
+      src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js"
+    ></script>
+    <script src="https://cdn.staticfile.org/babel-standalone/6.26.0/babel.min.js"></script>
+    <title>动态Context</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="text/babel">
+      const themes = {
+        light: {
+          foreground: "#000000",
+          background: "#eeeeee",
+        },
+        dark: {
+          foreground: "#ffffff",
+          background: "#222222",
+        },
+      };
+
+      const ThemeContext = React.createContext(themes.dark);
+
+      /******************************************* 动态更新Context *******************************************/
+      class ThemedButton extends React.Component {
+        render() {
+          let props = this.props;
+          let theme = this.context;
+          return (
+            <button
+              {...props}
+              style={{ backgroundColor: theme.background }}
+            ></button>
+          );
+        }
+      }
+
+      ThemedButton.contextType = ThemeContext;
+
+      function Toolbar(props) {
+        return (
+          <ThemedButton onClick={props.changeTheme}>Change Theme</ThemedButton>
+        );
+      }
+
+      function Section(props) {
+        return <section>{props.children}</section>;
+      }
+
+      class App extends React.Component {
+        constructor(props) {
+          super(props);
+          this.state = {
+            theme: themes.light,
+          };
+          //  通过修改Provider的参数进行修改Context的值
+          this.toggleTheme = () => {
+            this.setState((state) => ({
+              theme: state.theme === themes.dark ? themes.light : themes.dark,
+            }));
+          };
+        }
+
+        render() {
+          return (
+            <div>
+              <ThemeContext.Provider value={this.state.theme}>
+                <Toolbar changeTheme={this.toggleTheme} />
+              </ThemeContext.Provider>
+              <hr />
+              <Section>
+                <ThemedButton>我是Section</ThemedButton>
+              </Section>
+            </div>
+          );
+        }
+      }
+
+      /******************************************* 在嵌套组件中更新Context *******************************************/
+
+      const ThemeContent = React.createContext({
+        theme: themes.dark,
+        toggleTheme: () => {},
+      });
+
+      //   函数组件通过Consumer接收Context
+      function ThemeToggleButton() {
+        return (
+          <ThemeContent.Consumer>
+            {({ theme, toggleTheme }) => {
+              return (
+                <button
+                  style={{ backgroundColor: theme.background }}
+                  onClick={toggleTheme}
+                >
+                  Toggle Theme
+                </button>
+              );
+            }}
+          </ThemeContent.Consumer>
+        );
+      }
+
+      /* // 类组件通过 contextType 接收 Context 对象
+        class ThemeToggleButton extends React.Component {
+          static contextType = ThemeContext;
+          constructor(props) {
+            super(props);
+          }
+          render() {
+            return <button>小明</button>;
+          }
+        } */
+
+      function Content() {
+        return (
+          <div>
+            <ThemeToggleButton />
+          </div>
+        );
+      }
+
+      class AppToggle extends React.Component {
+        constructor(props) {
+          super(props);
+          this.toggleTheme = () => {
+            this.setState((state) => ({
+              theme: state.theme === themes.dark ? themes.light : themes.dark,
+            }));
+          };
+          this.state = {
+            theme: themes.light,
+            toggleTheme: this.toggleTheme,
+          };
+        }
+
+        render() {
+          return (
+            <ThemeContent.Provider value={this.state}>
+              <Content />
+            </ThemeContent.Provider>
+          );
+        }
+      }
+
+      ReactDOM.render(
+        <div>
+          <App />
+          <hr />
+          <AppToggle />
+        </div>,
+        document.getElementById("root")
+      );
+    </script>
+  </body>
+</html>

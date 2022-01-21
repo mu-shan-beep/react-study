@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>状态提升</title>
+    <script
+      crossorigin
+      src="https://unpkg.com/react@16/umd/react.production.min.js"
+    ></script>
+    <script
+      crossorigin
+      src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js"
+    ></script>
+    <script src="https://cdn.staticfile.org/babel-standalone/6.26.0/babel.min.js"></script>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="text/babel">
+      const scaleNames = {
+        c: "Celsius",
+        f: "Fahrenheit",
+      };
+
+      // 摄氏度
+      function toCelsius(fahrenheit) {
+        return ((fahrenheit - 32) * 5) / 9;
+      }
+
+      // 华氏温度
+      function toFahrenheit(celsius) {
+        return (celsius * 9) / 5 + 32;
+      }
+
+      function tryConvert(temperature, convert) {
+        const input = parseFloat(temperature);
+        console.log(input, "ssssssssss");
+        if (Number.isNaN(input)) return "";
+        // 转换温度摄氏度、华氏度
+        const output = convert(input);
+        // 进行四舍五入
+        const rounded = Math.round(output * 1000) / 1000;
+        return rounded.toString();
+      }
+
+      function BoilingVerdict(props) {
+        if (parseFloat(props.celsius) >= 100) {
+          return <p>The water would boil.</p>;
+        }
+        return <p>The water would not boil.</p>;
+      }
+
+      class TemperatureInput extends React.Component {
+        constructor(props) {
+          super(props);
+          this.handleChange = this.handleChange.bind(this);
+        }
+
+        handleChange(e) {
+          //修改父组件中state的temperature
+          this.props.onTemperatureChange(e.target.value);
+        }
+
+        render() {
+          const temperature = this.props.temperature;
+          const scale = this.props.scale;
+          return (
+            <fieldset>
+              <legend>Enter temperature in {scaleNames[scale]}:</legend>
+              <input
+                type="text"
+                value={temperature}
+                onChange={this.handleChange}
+              />
+              <BoilingVerdict celsius={parseFloat(temperature)} />
+            </fieldset>
+          );
+        }
+      }
+
+      class Calculator extends React.Component {
+        constructor(props) {
+          super(props);
+          this.handleCelsiusChange = this.handleCelsiusChange.bind(this);
+          this.handleFahrenheitChange = this.handleFahrenheitChange.bind(this);
+          this.state = { temperature: "", scale: "c" };
+        }
+
+        handleCelsiusChange(temperature) {
+          this.setState({ scale: "c", temperature });
+        }
+
+        handleFahrenheitChange(temperature) {
+          this.setState({ scale: "f", temperature });
+        }
+
+        render() {
+          const scale = this.state.scale;
+          const temperature = this.state.temperature;
+          const celsius =
+            scale === "f" ? tryConvert(temperature, toCelsius) : temperature;
+          const fahrenheit =
+            scale === "c" ? tryConvert(temperature, toFahrenheit) : temperature;
+
+          return (
+            <div>
+              <TemperatureInput
+                scale="c"
+                temperature={celsius}
+                onTemperatureChange={this.handleCelsiusChange}
+              />
+              <TemperatureInput
+                scale="f"
+                temperature={fahrenheit}
+                onTemperatureChange={this.handleFahrenheitChange}
+              />
+              <BoilingVerdict celsius={parseFloat(celsius)} />
+            </div>
+          );
+        }
+      }
+      ReactDOM.render(
+        <div>
+          <Calculator />
+          <BoilingVerdict />
+        </div>,
+        document.getElementById("root")
+      );
+    </script>
+  </body>
+</html>

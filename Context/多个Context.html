@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script
+      crossorigin
+      src="https://unpkg.com/react@16/umd/react.production.min.js"
+    ></script>
+    <script
+      crossorigin
+      src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js"
+    ></script>
+    <script src="https://cdn.staticfile.org/babel-standalone/6.26.0/babel.min.js"></script>
+    <title>多个Context</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="text/babel">
+      const ThemeContext = React.createContext("light");
+      const UserContext = React.createContext({
+        name: "Guest",
+      });
+
+      class App extends React.Component {
+        render() {
+          const { signedInUser, theme } = this.props;
+          return (
+            <ThemeContext.Provider value={theme}>
+              <UserContext.Provider value={signedInUser}>
+                <Layout />
+              </UserContext.Provider>
+            </ThemeContext.Provider>
+          );
+        }
+      }
+
+      function Layout() {
+        return (
+          <div>
+            <Content />
+          </div>
+        );
+      }
+
+      function Content() {
+        return (
+          <ThemeContext.Consumer>
+            {(theme) => {
+              return (
+                <UserContext.Consumer>
+                  {(user) => {
+                    return <ProfilePage user={user} theme={theme} />;
+                  }}
+                </UserContext.Consumer>
+              );
+            }}
+          </ThemeContext.Consumer>
+        );
+      }
+
+      function ProfilePage(props) {
+        const { user, theme } = props;
+        return (
+          <div>
+            <h1>user: {user}</h1>
+            <h1>theme：{theme}</h1>
+          </div>
+        );
+      }
+
+      ReactDOM.render(
+        <div>
+          <App signedInUser="小明" theme="dark" />
+        </div>,
+        document.getElementById("root")
+      );
+    </script>
+  </body>
+</html>

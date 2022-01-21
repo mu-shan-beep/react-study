@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script
+      crossorigin
+      src="https://unpkg.com/react@16/umd/react.production.min.js"
+    ></script>
+    <script
+      crossorigin
+      src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js"
+    ></script>
+    <script src="https://cdn.staticfile.org/babel-standalone/6.26.0/babel.min.js"></script>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="text/babel">
+      /*     function Clock(props) {
+        return (
+          <div>
+            <h1>Hello,world</h1>
+            <h2>It is {props.date.toLocaleTimeString()}</h2>
+          </div>
+        );
+      } */
+
+      /**
+       * State修改不能直接修改，需要使用State
+       * State的更新可能是异步的，要解决该问题可传入一个函数
+       * this.setState((state,props)=>({XXX:state.XXX+props.XXX}))
+       * js的class方法默认不会绑定this，如果忘记绑定，调用该函数的时候this值为undefined
+       */
+
+      class Toggle extends React.Component {
+        constructor(props) {
+          super(props);
+          this.state = {
+            isToggleOn: true,
+          };
+          //   在回调中使用this，绑定必不可少
+          this.handleClick = this.handleClick.bind(this);
+        }
+
+        handleClick() {
+          this.setState((state) => ({ isToggleOn: !state.isToggleOn }));
+        }
+
+        render() {
+          return (
+            <button onClick={this.handleClick}>
+              {this.state.isToggleOn ? "ON" : "OFF"}
+            </button>
+          );
+        }
+      }
+
+      class Clock extends React.Component {
+        constructor(props) {
+          super(props);
+          this.state = { date: new Date() };
+        }
+
+        // 挂载，组件已被渲染到DOM中
+        componentDidMount() {
+          this.timer = setInterval(() => this.tick(), 1000);
+        }
+
+        // 组件销毁
+        componentWillUnmount() {
+          clearInterval(this.timer);
+        }
+
+        tick() {
+          this.setState({ date: new Date() });
+        }
+
+        render() {
+          return (
+            <div>
+              <h1>Hello，world</h1>
+              <h2>It is {this.state.date.toLocaleTimeString()}</h2>
+            </div>
+          );
+        }
+      }
+
+      ReactDOM.render(
+        <div>
+          <Clock />
+          <Toggle />
+        </div>,
+        document.getElementById("root")
+      );
+    </script>
+  </body>
+</html>
