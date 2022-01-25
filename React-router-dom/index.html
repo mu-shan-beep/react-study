@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script
+            crossorigin
+            src="https://unpkg.com/react@16/umd/react.production.min.js"
+    ></script>
+    <script
+            crossorigin
+            src="https://unpkg.com/react-dom@16/umd/react-dom.production.min.js"
+    ></script>
+    <script src="https://cdn.staticfile.org/babel-standalone/6.26.0/babel.min.js"></script>
+
+    <script src="https://unpkg.com/history@5/umd/history.development.js" crossorigin></script>
+
+    <script src="https://unpkg.com/react-router@6/umd/react-router.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-router-dom@6/umd/react-router-dom.development.js" crossorigin></script>
+    <title>React-router-dom</title>
+
+</head>
+<body>
+<div id="root"></div>
+<script>
+    const {Routes, Route, NavLink, Link, useNavigate, useParams, Outlet, useSearchParams, useLocation} = ReactRouterDOM;
+</script>
+<!--<script type="text/babel" src="./index.js"></script>-->
+<script type="text/babel" src="./routes.js"></script>
+
+
+<script type="text/babel">
+    const {BrowserRouter} = ReactRouterDOM;
+    ReactDOM.render(
+        <BrowserRouter>
+            <App/>
+        </BrowserRouter>
+        , document.getElementById("root"))
+</script>
+</body>
+</html>
