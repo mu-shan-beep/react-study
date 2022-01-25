@@ -136,21 +136,17 @@ function Invoice() {
 }
 
 function BrandLink({brand, ...props}) {
-    let [params] = useSearchParams();
-    let isActive = params.getAll("brand").includes(brand);
-    if (!isActive) {
-        params.append("brand", brand);
-    } else {
-        params = new URLSearchParams(Array.from(params).filter(([key, value]) =>
-            key !== "brand" || value !== brand)
-        )
-    }
-    return (<Link style={{color: isActive ? "red" : ""}} to={`/shoes?${params.toString()}`}  {...props}/>)
+    return <h1>我是BrandLink组件</h1>
 }
 
 function Home() {
     return <div>
         <h1>我是Home组件</h1>
+        <button onClick={() => {
+            generatePath("/invoices/:InvoiceId", {InvoiceId: 2000})
+        }
+        }>点击
+        </button>
         <Outlet/>
     </div>
 }

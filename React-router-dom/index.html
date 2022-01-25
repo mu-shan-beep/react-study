@@ -25,18 +25,39 @@
 <body>
 <div id="root"></div>
 <script>
-    const {Routes, Route, NavLink, Link, useNavigate, useParams, Outlet, useSearchParams, useLocation} = ReactRouterDOM;
+    const {
+        Routes,
+        Route,
+        NavLink,
+        Link,
+        useNavigate,
+        useParams,
+        Outlet,
+        useSearchParams,
+        useLocation,
+        BrowserRouter,
+        MemoryRouter,
+        HashRouter,
+        generatePath
+    } = ReactRouterDOM;
 </script>
 <!--<script type="text/babel" src="./index.js"></script>-->
 <script type="text/babel" src="./routes.js"></script>
 
 
 <script type="text/babel">
-    const {BrowserRouter} = ReactRouterDOM;
     ReactDOM.render(
         <BrowserRouter>
             <App/>
         </BrowserRouter>
+        /*<MemoryRouter>
+            <App/>
+        </MemoryRouter>,
+        <HashRouter>
+            <App/>
+        </HashRouter>
+        */
+
         , document.getElementById("root"))
 </script>
 </body>
